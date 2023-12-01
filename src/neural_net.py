@@ -355,7 +355,7 @@ def predict(X, y, parameters):
 
 
 
-def NeuralNet(X, Y, layers_dims, learning_rate = 0.01, num_iterations=2000, print_cost=True):
+def learn(X, Y, layers_dims, learning_rate = 0.01, num_iterations=2000, print_cost=True):
     """
     Implements a L-layer neural network: [LINEAR->RELU]*(L-1)->LINEAR->SIGMOID.
 
