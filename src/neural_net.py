@@ -136,7 +136,7 @@ def linear_activation_forward(A_prev, W, b, activation):
 
     Returns:
     A -- the output of the activation function, also called the post-activation value
-    cache -- a python tuple containing "linear_cache" and "activation_cache";
+    cache -- a python tuple containing "linear_cache" and "activation_cache";   
              stored for computing the backward pass efficiently
     """
     if activation == "sigmoid":
