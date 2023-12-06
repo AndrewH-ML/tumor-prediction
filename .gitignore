@@ -1,3 +1,4 @@
 data
 src/__pycache__
+src/test_neural_net.py
 venv
