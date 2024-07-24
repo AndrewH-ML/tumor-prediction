@@ -9,4 +9,14 @@ from flask_cors import CORS
 app = Flask(__name__)
 talisman = Talisman(app)
 cors = CORS(app)
-app.config.from_object
+app.config.from_object(config)
+
+from service import routes
+
+log_handlers.init_logging(app, "gunicorn.error")
+
+app.logger.info(70 * "*")
+app.logger.info("  TUMOR PREDICTION SERVICE RUNNING ".center(70, "*"))
+app.logger.info(70 * "*")
+
+app.logger.info("Service Initialized")
