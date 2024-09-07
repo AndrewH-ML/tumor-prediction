@@ -10,6 +10,7 @@ app = Flask(__name__)
 talisman = Talisman(app)
 cors = CORS(app)
 app.config.from_object(config)
+app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16 MB limit
 
 from service import routes
 
@@ -20,3 +21,12 @@ app.logger.info("  TUMOR PREDICTION SERVICE RUNNING ".center(70, "*"))
 app.logger.info(70 * "*")
 
 app.logger.info("Service Initialized")
+
+
+@app.errorhandler(404)
+def not_found(error):
+    return jsonify({"error": "Not Found"}), 404
+
+@app.errorhandler(500)
+def internal_error(error):
+    return jsonify({"error": "Internal Server Error"}), 500

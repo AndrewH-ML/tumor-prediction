@@ -1,15 +1,19 @@
-from flask import request, jsonify
+from flask import request, jsonify, render_template
 from service import app
-import boto3
-from service.preprocessing import preprocess_image
+from service.preprocess import preprocess_image
 import neural_net  # Assuming this is your custom neural network module
+import neural_net
+import os 
+from werkzeug.utils import secure_filename
+from PIL import Image
 
-s3 = boto3.client(
-    's3',
-    aws_access_key_id=app.config['AWS_ACCESS_KEY_ID'],
-    aws_secret_access_key=app.config['AWS_SECRET_ACCESS_KEY'],
-    region_name=app.config['AWS_REGION']
-)
+
+UPLOAD_FOLDER = '/tmp/uploads'  # Temporary folder
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+
+@app.route('/')
+def index():
+    return render_template('index.html')
 
 @app.route('/predict', methods=['POST'])
 def predict():
@@ -22,16 +26,23 @@ def predict():
         return jsonify({"error": "No selected file"}), 400
 
     if file:
-        # Save the image to S3
-        s3_key = f"uploads/{file.filename}"
-        s3.upload_fileobj(file, app.config['S3_BUCKET'], s3_key)
-        image_url = f"https://{app.config['S3_BUCKET']}.s3.amazonaws.com/{s3_key}"
+        # store image locally 
+        filename = secure_filename(file.filename)
+        file_path = os.path.join(UPLOAD_FOLDER, filename)
+        file.save(file_path)
+       
+        try:
+            # Preprocess the image and make a prediction
+            image = Image.open(file_path)
+            processed_image = preprocess_image(image)
+            prediction = neural_net.predict(processed_image)
 
-        # Preprocess the image and make a prediction
-        image = Image.open(file.stream)
-        processed_image = preprocess_image(image)
-        prediction = neural_net.predict(processed_image)
+            # Return the prediction result
+            return jsonify({"prediction": prediction.tolist()})
 
-        return jsonify({"prediction": prediction.tolist(), "image_url": image_url})
+        finally:
+            # Delete the file after processing to free memory
+            if os.path.exists(file_path):
+                os.remove(file_path)
 
     return jsonify({"error": "Failed to process the image"}), 500
