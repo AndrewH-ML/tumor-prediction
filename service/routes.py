@@ -1,11 +1,10 @@
 from flask import request, jsonify, render_template
 from service import app
 from service.preprocess import preprocess_image
-import neural_net  # Assuming this is your custom neural network module
-import neural_net
 import os 
 from werkzeug.utils import secure_filename
 from PIL import Image
+from service.neural_net import predict
 
 
 UPLOAD_FOLDER = '/tmp/uploads'  # Temporary folder
@@ -35,7 +34,7 @@ def predict():
             # Preprocess the image and make a prediction
             image = Image.open(file_path)
             processed_image = preprocess_image(image)
-            prediction = neural_net.predict(processed_image)
+            prediction = predict(processed_image)
 
             # Return the prediction result
             return jsonify({"prediction": prediction.tolist()})

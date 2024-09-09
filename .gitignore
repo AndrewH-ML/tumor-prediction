@@ -1,2 +1,7 @@
 data
 venv
+.gitignore
+unseal.key
+.dockerignore
+service/__pycache__/neural_net.cpython-310.pyc
+service/__pycache__

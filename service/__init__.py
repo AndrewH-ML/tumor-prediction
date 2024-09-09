@@ -1,5 +1,6 @@
 import sys
 from flask import Flask
+from flask import jsonify
 from service import config
 from service.common import log_handlers
 from flask_talisman import Talisman
@@ -7,9 +8,9 @@ from flask_cors import CORS
 
 # Create Flask application
 app = Flask(__name__)
-talisman = Talisman(app)
-cors = CORS(app)
-app.config.from_object(config)
+# # talisman = Talisman(app)
+# cors = CORS(app)
+# talisman.force_https = False
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16 MB limit
 
 from service import routes

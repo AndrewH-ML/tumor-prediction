@@ -1,0 +1,21 @@
+#deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mri-service-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: mri-service-app
+  template:
+    metadata: 
+      labels:
+        app: mri-service-app
+    spec:
+      containers:
+        - name: mri-service-container
+          image: mri-predict-image:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 5000
