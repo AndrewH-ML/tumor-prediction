@@ -2,8 +2,14 @@ import numpy as np
 from PIL import Image
 
 def preprocess_image(image):
-    im = np.array(Image.open(image).resize((200, 200)).convert('RGB'))
+    im = np.array(image.resize((200, 200)).convert('RGB'))
+    print(im.shape)
+    im = im.reshape(1, 200, 200, 3)
+    print(im.shape)
+    im = im.reshape(1, -1)
+    print(im.shape)
     im = im/255.
-    im = im.reshape(im.shape[0], -1)
-    return im
+    processed_image = im.T
+    print(processed_image.shape)
+    return processed_image
     

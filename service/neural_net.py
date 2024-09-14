@@ -319,7 +319,7 @@ def update_parameters(params, grads, learning_rate):
 
     return parameters
 
-def predict(X, y, parameters):
+def predict(X, parameters, y=None):
     """
     This function is used to predict the results of a  L-layer neural network.
 
@@ -338,7 +338,6 @@ def predict(X, y, parameters):
     # Forward propagation
     probas, caches = model_forward(X, parameters)
 
-
     # convert probas to 0/1 predictions
     for i in range(0, probas.shape[1]):
         if probas[0,i] > 0.5:
@@ -349,8 +348,8 @@ def predict(X, y, parameters):
     #print results
     #print ("predictions: " + str(p))
     #print ("true labels: " + str(y))
-    print("Accuracy: "  + str(np.sum((p == y)/m)))
-
+    if(y): 
+        print("Accuracy: "  + str(np.sum((p == y)/m)))
     return p
 
 

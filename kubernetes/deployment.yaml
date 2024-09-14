@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: mri-service-container
-          image: mri-predict-image:latest
-          imagePullPolicy: Never
+          image: ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/mri-predict-image:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 5000

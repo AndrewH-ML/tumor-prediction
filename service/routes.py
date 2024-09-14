@@ -4,11 +4,16 @@ from service.preprocess import preprocess_image
 import os 
 from werkzeug.utils import secure_filename
 from PIL import Image
-from service.neural_net import predict
+import pickle
+from service import neural_net
 
 
 UPLOAD_FOLDER = '/tmp/uploads'  # Temporary folder
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+service_dir = os.path.dirname(os.path.abspath(__file__))
+weights_path = os.path.join(service_dir, 'weights', 'nn_weights.pkl')
+with open(weights_path, 'rb') as f:
+    weights = pickle.load(f)
 
 @app.route('/')
 def index():
@@ -34,7 +39,7 @@ def predict():
             # Preprocess the image and make a prediction
             image = Image.open(file_path)
             processed_image = preprocess_image(image)
-            prediction = predict(processed_image)
+            prediction = neural_net.predict(processed_image, weights)
 
             # Return the prediction result
             return jsonify({"prediction": prediction.tolist()})

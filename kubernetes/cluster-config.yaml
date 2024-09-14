@@ -1,0 +1,43 @@
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+
+metadata:
+  name: mri-predict-cluster
+  region: us-west-1 
+  version: "1.29"
+
+availabilityZones: ["us-west-1a", "us-west-1c"] 
+
+nodeGroups:
+  - name: linux-nodes
+    instanceType: t3.small
+    desiredCapacity: 2
+    minSize: 1
+    maxSize: 3
+    volumeSize: 20  # Size in GiB
+    tags:
+      nodegroup-role: worker
+    labels:
+      role: worker
+    iam:
+      withAddonPolicies:
+        imageBuilder: true
+        autoScaler: true
+
+vpc:
+  cidr: "192.168.0.0/16"
+
+iam:
+  withOIDC: true  
+
+cloudWatch:
+  clusterLogging:
+    enableTypes: ["*"]  
+
+addons:
+  - name: vpc-cni
+    version: latest
+  - name: kube-proxy
+    version: latest
+  - name: coredns
+    version: latest
