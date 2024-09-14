@@ -4,11 +4,10 @@ kind: Service
 metadata:
   name: mri-predict-service
 spec:
-  type: NodePort
+  type: LoadBalancer
   ports:
   - port: 80
     targetPort: 5000
-    nodePort: 31879
   selector:
     app: mri-service-app
     
