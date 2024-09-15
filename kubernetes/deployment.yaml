@@ -2,20 +2,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: mri-service-deployment
+  name: tumor-prediction-deployment
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: mri-service-app
+      app: tumor-prediction-app
   template:
     metadata: 
       labels:
-        app: mri-service-app
+        app: tumor-prediction-app
     spec:
       containers:
-        - name: mri-service-container
-          image: ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/mri-predict-image:latest
+        - name: tumor-prediction-container
+          image: ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/tumor-prediction:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 5000

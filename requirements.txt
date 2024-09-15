@@ -5,3 +5,7 @@ numpy
 Pillow
 Werkzeug
 gunicorn
+nose
+coverage
+flake8
+pylint
