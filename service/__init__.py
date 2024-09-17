@@ -9,7 +9,6 @@ from flask_cors import CORS
 # Create Flask application
 app = Flask(__name__)
 # Import your routes after the app is created
-from service import routes
 # # talisman = Talisman(app)
 # cors = CORS(app)
 # talisman.force_https = False

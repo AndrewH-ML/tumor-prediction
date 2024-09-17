@@ -9,40 +9,61 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # Step 1: Checkout the code
       - name: Checkout code
         uses: actions/checkout@v3
 
+      # Step 2: Set up Python
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.11'
 
+      # Step 3: Install dependencies
       - name: Install dependencies
         run: |
           pip install -r requirements.txt
 
+      # Step 4: Run Tests
       - name: Run Tests
         run: |
           nose2
 
+      # Step 5: Lint with Flake8
       - name: Lint with Flake8
         run: |
           flake8
 
+      # Step 6: Build Docker image
       - name: Build Docker image
         run: |
           docker build -t tumor-prediction:${{ github.sha }} .
 
+      # Step 7: Install AWS CLI
+      - name: Install AWS CLI
+        run: |
+          curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+          unzip awscliv2.zip
+          sudo ./aws/install
+
+      # Step 8: Configure AWS credentials
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      # Step 9: Log in to Amazon ECR
       - name: Log in to Amazon ECR
         env:
           AWS_REGION: ${{ secrets.AWS_REGION }}
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
         run: |
           aws ecr get-login-password --region $AWS_REGION | \
           docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com
 
+      # Step 10: Push Docker image to ECR
       - name: Push Docker image to ECR
         env:
           AWS_REGION: ${{ secrets.AWS_REGION }}
@@ -51,17 +72,48 @@ jobs:
           docker tag tumor-prediction:${{ github.sha }} ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/tumor-prediction:${{ github.sha }}
           docker push ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/tumor-prediction:${{ github.sha }}
 
+      # Step 11: Check if EKS cluster exists
+      - name: Check if EKS cluster exists
+        id: check_cluster
+        env:
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+        run: |
+          CLUSTER_STATUS=$(aws eks describe-cluster --name your-cluster-name --region $AWS_REGION --query 'cluster.status' --output text 2>/dev/null || echo 'None')
+          echo "cluster_status=$CLUSTER_STATUS" >> $GITHUB_OUTPUT
+
+      # Step 12: Fail if cluster does not exist
+      - name: Fail if cluster does not exist
+        if: steps.check_cluster.outputs.cluster_status == 'None'
+        run: |
+          echo "EKS cluster does not exist. Exiting."
+          exit 1
+
+      # Step 13: Set Up kubectl
       - name: Set Up kubectl
         uses: azure/setup-kubectl@v1
         with:
           version: 'v1.29.0'
 
+      # Step 14: Update kubeconfig for EKS cluster
+      - name: Update kubeconfig for EKS cluster
+        env:
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+        run: |
+          aws eks update-kubeconfig --name your-cluster-name --region $AWS_REGION
+
+      # Step 15: Test kubectl connection
+      - name: Test kubectl connection
+        run: |
+          kubectl get nodes
+
+      # Step 16: Apply Kubernetes Configurations
       - name: Apply Kubernetes Configurations
         run: |
           kubectl apply -f kubernetes/cluster-config.yaml
           kubectl apply -f kubernetes/service.yaml
           kubectl apply -f kubernetes/deployment.yaml
 
+      # Step 17: Deploy to Kubernetes
       - name: Deploy to Kubernetes
         env:
           AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
