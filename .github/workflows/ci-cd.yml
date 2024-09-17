@@ -58,9 +58,9 @@ jobs:
 
       - name: Apply Kubernetes Configurations
         run: |
-          kubectl apply -f cluster-config.yaml
-          kubectl apply -f service.yaml
-          kubectl apply -f deployment.yaml
+          kubectl apply -f kubernetes/cluster-config.yaml
+          kubectl apply -f kubernetes/service.yaml
+          kubectl apply -f kubernetes/deployment.yaml
 
       - name: Deploy to Kubernetes
         env:
