@@ -5,21 +5,22 @@ from service.common import log_handlers
 from flask_talisman import Talisman
 from flask_cors import CORS
 
+
 # Create Flask application
 app = Flask(__name__)
+# Import your routes after the app is created
+from service import routes
 # # talisman = Talisman(app)
 # cors = CORS(app)
 # talisman.force_https = False
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16 MB limit
-
 from service import routes
-
 log_handlers.init_logging(app, "gunicorn.error")
+
 
 app.logger.info(70 * "*")
 app.logger.info("  TUMOR PREDICTION SERVICE RUNNING ".center(70, "*"))
 app.logger.info(70 * "*")
-
 app.logger.info("Service Initialized")
 
 

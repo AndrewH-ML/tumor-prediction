@@ -5,7 +5,8 @@ numpy
 Pillow
 Werkzeug
 gunicorn
-nose
+nose2[coverage-plugin]
 coverage
 flake8
 pylint
+
