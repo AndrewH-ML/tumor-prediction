@@ -23,11 +23,11 @@ jobs:
 
       - name: Run Tests
         run: |
-          nosetests --with-coverage --cover-package=service tests/
+          nose2
 
       - name: Lint with Flake8
         run: |
-          flake8 service/ tests/
+          flake8
 
       - name: Build Docker image
         run: |

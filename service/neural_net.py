@@ -1,5 +1,6 @@
 import numpy as np 
 
+
 def sigmoid(Z):
     """
     Implements the sigmoid activation in numpy
@@ -30,11 +31,11 @@ def relu(Z):
     cache -- a python dictionary containing "A" ; stored for computing the backward pass efficiently
     """
 
-    A = np.maximum(0,Z)
+    A = np.maximum(0, Z)
 
-    assert(A.shape == Z.shape)
+    assert (A.shape == Z.shape)
 
-    cache = Z 
+    cache = Z
     return A, cache
 
 
@@ -59,7 +60,6 @@ def relu_backward(dA, cache):
     assert (dZ.shape == Z.shape)
 
     return dZ
-
 
 
 def sigmoid_backward(dA, cache):
@@ -100,8 +100,8 @@ def initialize_parameters(layer_dims):
         # dimension of w is (l, l-1)
         parameters['W' + str(l)] = np.random.randn(layer_dims[l], layer_dims[l-1]) * np.sqrt(1. / layer_dims[l-1])
         parameters['b' + str(l)] = np.zeros((layer_dims[l], 1))
-        assert(parameters['W' + str(l)].shape == (layer_dims[l], layer_dims[l - 1]))
-        assert(parameters['b' + str(l)].shape == (layer_dims[l], 1))
+        assert (parameters['W' + str(l)].shape == (layer_dims[l], layer_dims[l - 1]))
+        assert (parameters['b' + str(l)].shape == (layer_dims[l], 1))
     return parameters
 
 
@@ -119,7 +119,7 @@ def linear_forward(A, W, b):
     Z -- the input of the activation function, also called pre-activation parameter
     cache"""
     Z = np.dot(W, A) + b
-    #in cache we'll save A, W, b
+    # in cache we'll save A, W, b
     cache = (A, W, b)
 
     return Z, cache
