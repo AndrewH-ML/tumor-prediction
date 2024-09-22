@@ -4,13 +4,112 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Upload MRI Image for Tumor Prediction</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f4f4f9;
+        }
+        .container {
+            text-align: center;
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        #file {
+            margin-top: 10px;
+        }
+        button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        img {
+            margin-top: 20px;
+            max-width: 100%;
+            height: auto;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+        }
+        #response {
+            margin-top: 20px;
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #333;
+        }
+    </style>
 </head>
 <body>
-    <h1>Upload MRI Image for Tumor Prediction</h1>
-    <form action="/predict" method="POST" enctype="multipart/form-data">
-        <label for="file">Choose an MRI image:</label>
-        <input type="file" id="file" name="file" accept="image/*" required>
-        <button type="submit">Submit</button>
-    </form>
+    <div class="container">
+        <h1>Upload MRI Image for Tumor Prediction</h1>
+        <form id="upload-form">
+            <label for="file">Choose an MRI image:</label><br>
+            <input type="file" id="file" name="file" accept="image/*" required onchange="previewImage(event)">
+            <br>
+            <img id="image-preview" style="display:none;" />
+            <br>
+            <button type="submit">Submit</button>
+        </form>
+        <div id="response"></div>
+    </div>
+
+    <script>
+        // Show a preview of the image
+        function previewImage(event) {
+            var reader = new FileReader();
+            reader.onload = function(){
+                var output = document.getElementById('image-preview');
+                output.src = reader.result;
+                output.style.display = 'block';
+            };
+            reader.readAsDataURL(event.target.files[0]);
+
+            // Clear the previous prediction when a new image is selected
+            document.getElementById('response').textContent = '';
+        }
+
+        // Handle form submission and display the result
+        document.getElementById('upload-form').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent the form from submitting the traditional way
+
+            const formData = new FormData();
+            const fileInput = document.getElementById('file');
+            formData.append('file', fileInput.files[0]);
+
+            fetch('/predict', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Check if the data has a "prediction" key
+                const responseDiv = document.getElementById('response');
+                if (data.prediction) {
+                    responseDiv.textContent = 'The prediction for this image is: ' + data.prediction;
+                } else {
+                    responseDiv.textContent = 'An error occurred. Please try again.';
+                }
+                
+                // Reset the form to allow for another submission
+                document.getElementById('upload-form').reset();
+                document.getElementById('image-preview').style.display = 'none'; // Hide the preview after submission
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+    </script>
 </body>
 </html>

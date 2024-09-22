@@ -7,50 +7,63 @@ from PIL import Image
 import pickle
 from service import neural_net
 
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 
-UPLOAD_FOLDER = '/tmp/uploads'  # Temporary folder
-os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 service_dir = os.path.dirname(os.path.abspath(__file__))
 weights_path = os.path.join(service_dir, 'weights', 'nn_weights.pkl')
 with open(weights_path, 'rb') as f:
     weights = pickle.load(f)
 
 
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+
 @app.route('/')
 def index():
+    app.logger.info("Rendering index page")
     return render_template('index.html'), 200
-
 
 @app.route('/predict', methods=['POST'])
 def predict():
+    app.logger.info("Received prediction request")
+    
     if 'file' not in request.files:
+        app.logger.warning("No file part in the request")
         return jsonify({"error": "No file part"}), 400
 
     file = request.files['file']
 
     if file.filename == '':
+        app.logger.warning("No file selected")
         return jsonify({"error": "No selected file"}), 400
 
-    if file:
-        # store image locally
+    if not allowed_file(file.filename):
+        app.logger.warning(f"File type not allowed: {file.filename}")
+        return jsonify({"error": "File type not allowed"}), 400
+    
+    try:
+
         filename = secure_filename(file.filename)
-        file_path = os.path.join(UPLOAD_FOLDER, filename)
-        file.save(file_path)
-   
-        try:
-            # Preprocess the image and make a prediction
-            image = Image.open(file_path)
-            processed_image = preprocess_image(image)
-            prediction = neural_net.predict(processed_image, weights)
+        app.logger.info(f"Processing file: {filename}")
+        
+        file_extension = filename.rsplit('.', 1)[1].lower()
+        app.logger.info(f"Reading image file with extension: {file_extension}")
+        
+        image = Image.open(file)
+        app.logger.info(f"Preprocessing image")
+        processed_image = preprocess_image(image)
 
-            # Return the prediction result
-            return jsonify({"prediction": prediction.tolist()}), 200
-        except Exception as e:
-            return jsonify({"error": "Failed to process the image", "details": str(e)}), 500  # Handle processing errors
+        app.logger.info("Making prediction")
+        prediction = neural_net.predict(processed_image, weights)
+        
+        prediction_text = "tumor present" if prediction == 1 else "no tumor"
+        app.logger.info(f"Prediction result: {prediction_text}")
+        # Return the prediction result
+        return jsonify({"prediction": prediction_text}), 200
+    
+    except Exception as e:
+        app.logger.error(f"Failed to process the image: {e}", exc_info=True)
+        return jsonify({"error": "Failed to process the image", "details": str(e)}), 500
 
-        finally:
-            # Delete the file after processing to free memory
-            if os.path.exists(file_path):
-                os.remove(file_path)
-
-    return jsonify({"error": "Failed to process the image"}), 500
