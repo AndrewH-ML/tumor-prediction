@@ -1,4 +1,5 @@
-#deployment.yaml
+#deployment.yaml inside tumor-prediction/terraform/k8s-resources/kubernetes/
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -15,7 +16,7 @@ spec:
     spec:
       containers:
         - name: tumor-prediction-container
-          image: ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/tumor-prediction:latest
+          image: ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/tumor-prediction-repo:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 5000

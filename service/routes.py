@@ -1,3 +1,5 @@
+# routes.py
+
 from flask import request, jsonify, render_template
 from service import app
 from service.preprocess import preprocess_image
@@ -24,6 +26,7 @@ def allowed_file(filename):
 def index():
     app.logger.info("Rendering index page")
     return render_template('index.html'), 200
+
 
 @app.route('/predict', methods=['POST'])
 def predict():
