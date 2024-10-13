@@ -1,3 +1,5 @@
+# __init__.py
+
 import sys
 from flask import Flask
 from flask import jsonify

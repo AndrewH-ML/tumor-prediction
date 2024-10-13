@@ -1,0 +1,370 @@
+digraph G {
+  rankdir = "RL";
+  node [shape = rect, fontname = "sans-serif"];
+  "data.aws_iam_policy_document.eks_cluster_assume_role" [label="data.aws_iam_policy_document.eks_cluster_assume_role"];
+  "data.aws_iam_policy_document.eks_node_assume_role" [label="data.aws_iam_policy_document.eks_node_assume_role"];
+  "aws_ecr_repository.tumor-prediction_repo" [label="aws_ecr_repository.tumor-prediction_repo"];
+  "aws_eip.nat" [label="aws_eip.nat"];
+  "aws_iam_role.eks_cluster_role" [label="aws_iam_role.eks_cluster_role"];
+  "aws_iam_role.eks_node_role" [label="aws_iam_role.eks_node_role"];
+  "aws_iam_role_policy_attachment.ec2_container_registry_read_only" [label="aws_iam_role_policy_attachment.ec2_container_registry_read_only"];
+  "aws_iam_role_policy_attachment.eks_cluster_policy" [label="aws_iam_role_policy_attachment.eks_cluster_policy"];
+  "aws_iam_role_policy_attachment.eks_cni_policy" [label="aws_iam_role_policy_attachment.eks_cni_policy"];
+  "aws_iam_role_policy_attachment.eks_vpc_resource_controller" [label="aws_iam_role_policy_attachment.eks_vpc_resource_controller"];
+  "aws_iam_role_policy_attachment.eks_worker_node_policy" [label="aws_iam_role_policy_attachment.eks_worker_node_policy"];
+  "aws_internet_gateway.igw" [label="aws_internet_gateway.igw"];
+  "aws_lb.alb" [label="aws_lb.alb"];
+  "aws_lb_listener.http" [label="aws_lb_listener.http"];
+  "aws_lb_target_group.flask_tg" [label="aws_lb_target_group.flask_tg"];
+  "aws_nat_gateway.nat" [label="aws_nat_gateway.nat"];
+  "aws_route.private_internet_access" [label="aws_route.private_internet_access"];
+  "aws_route.public_internet_access" [label="aws_route.public_internet_access"];
+  "aws_route_table.private" [label="aws_route_table.private"];
+  "aws_route_table.public" [label="aws_route_table.public"];
+  "aws_route_table_association.private" [label="aws_route_table_association.private"];
+  "aws_route_table_association.public" [label="aws_route_table_association.public"];
+  "aws_security_group.alb_sg" [label="aws_security_group.alb_sg"];
+  "aws_security_group.eks_cluster_sg" [label="aws_security_group.eks_cluster_sg"];
+  "aws_security_group.worker_sg" [label="aws_security_group.worker_sg"];
+  "aws_subnet.private" [label="aws_subnet.private"];
+  "aws_subnet.public" [label="aws_subnet.public"];
+  "aws_vpc.main" [label="aws_vpc.main"];
+  "aws_vpc_security_group_egress_rule.alb_allow_all_egress" [label="aws_vpc_security_group_egress_rule.alb_allow_all_egress"];
+  "aws_vpc_security_group_egress_rule.allow_all_traffic_ipv4" [label="aws_vpc_security_group_egress_rule.allow_all_traffic_ipv4"];
+  "aws_vpc_security_group_egress_rule.worker_allow_all_egress" [label="aws_vpc_security_group_egress_rule.worker_allow_all_egress"];
+  "aws_vpc_security_group_ingress_rule.alb_http_ingress" [label="aws_vpc_security_group_ingress_rule.alb_http_ingress"];
+  "aws_vpc_security_group_ingress_rule.alb_https_ingress" [label="aws_vpc_security_group_ingress_rule.alb_https_ingress"];
+  "aws_vpc_security_group_ingress_rule.allow_worker_traffic_ipv4" [label="aws_vpc_security_group_ingress_rule.allow_worker_traffic_ipv4"];
+  "aws_vpc_security_group_ingress_rule.worker_https_ingress" [label="aws_vpc_security_group_ingress_rule.worker_https_ingress"];
+  "aws_vpc_security_group_ingress_rule.worker_internal_traffic" [label="aws_vpc_security_group_ingress_rule.worker_internal_traffic"];
+  subgraph "cluster_module.eks" {
+    label = "module.eks"
+    fontname = "sans-serif"
+    "module.eks.data.aws_caller_identity.current" [label="data.aws_caller_identity.current"];
+    "module.eks.data.aws_eks_addon_version.this" [label="data.aws_eks_addon_version.this"];
+    "module.eks.data.aws_iam_policy_document.assume_role_policy" [label="data.aws_iam_policy_document.assume_role_policy"];
+    "module.eks.data.aws_iam_policy_document.cni_ipv6_policy" [label="data.aws_iam_policy_document.cni_ipv6_policy"];
+    "module.eks.data.aws_iam_session_context.current" [label="data.aws_iam_session_context.current"];
+    "module.eks.data.aws_partition.current" [label="data.aws_partition.current"];
+    "module.eks.data.tls_certificate.this" [label="data.tls_certificate.this"];
+    "module.eks.aws_cloudwatch_log_group.this" [label="aws_cloudwatch_log_group.this"];
+    "module.eks.aws_ec2_tag.cluster_primary_security_group" [label="aws_ec2_tag.cluster_primary_security_group"];
+    "module.eks.aws_eks_access_entry.this" [label="aws_eks_access_entry.this"];
+    "module.eks.aws_eks_access_policy_association.this" [label="aws_eks_access_policy_association.this"];
+    "module.eks.aws_eks_addon.before_compute" [label="aws_eks_addon.before_compute"];
+    "module.eks.aws_eks_addon.this" [label="aws_eks_addon.this"];
+    "module.eks.aws_eks_cluster.this" [label="aws_eks_cluster.this"];
+    "module.eks.aws_eks_identity_provider_config.this" [label="aws_eks_identity_provider_config.this"];
+    "module.eks.aws_iam_openid_connect_provider.oidc_provider" [label="aws_iam_openid_connect_provider.oidc_provider"];
+    "module.eks.aws_iam_policy.cluster_encryption" [label="aws_iam_policy.cluster_encryption"];
+    "module.eks.aws_iam_policy.cni_ipv6_policy" [label="aws_iam_policy.cni_ipv6_policy"];
+    "module.eks.aws_iam_role.this" [label="aws_iam_role.this"];
+    "module.eks.aws_iam_role_policy_attachment.additional" [label="aws_iam_role_policy_attachment.additional"];
+    "module.eks.aws_iam_role_policy_attachment.cluster_encryption" [label="aws_iam_role_policy_attachment.cluster_encryption"];
+    "module.eks.aws_iam_role_policy_attachment.this" [label="aws_iam_role_policy_attachment.this"];
+    "module.eks.aws_security_group.cluster" [label="aws_security_group.cluster"];
+    "module.eks.aws_security_group.node" [label="aws_security_group.node"];
+    "module.eks.aws_security_group_rule.cluster" [label="aws_security_group_rule.cluster"];
+    "module.eks.aws_security_group_rule.node" [label="aws_security_group_rule.node"];
+    "module.eks.time_sleep.this" [label="time_sleep.this"];
+  }
+  subgraph "cluster_module.eks.module.eks_managed_node_group" {
+    label = "module.eks.module.eks_managed_node_group"
+    fontname = "sans-serif"
+    "module.eks.module.eks_managed_node_group.data.aws_caller_identity.current" [label="data.aws_caller_identity.current"];
+    "module.eks.module.eks_managed_node_group.data.aws_ec2_instance_type.this" [label="data.aws_ec2_instance_type.this"];
+    "module.eks.module.eks_managed_node_group.data.aws_ec2_instance_type_offerings.this" [label="data.aws_ec2_instance_type_offerings.this"];
+    "module.eks.module.eks_managed_node_group.data.aws_iam_policy_document.assume_role_policy" [label="data.aws_iam_policy_document.assume_role_policy"];
+    "module.eks.module.eks_managed_node_group.data.aws_iam_policy_document.role" [label="data.aws_iam_policy_document.role"];
+    "module.eks.module.eks_managed_node_group.data.aws_partition.current" [label="data.aws_partition.current"];
+    "module.eks.module.eks_managed_node_group.data.aws_ssm_parameter.ami" [label="data.aws_ssm_parameter.ami"];
+    "module.eks.module.eks_managed_node_group.data.aws_subnets.placement_group" [label="data.aws_subnets.placement_group"];
+    "module.eks.module.eks_managed_node_group.aws_autoscaling_schedule.this" [label="aws_autoscaling_schedule.this"];
+    "module.eks.module.eks_managed_node_group.aws_eks_node_group.this" [label="aws_eks_node_group.this"];
+    "module.eks.module.eks_managed_node_group.aws_iam_role.this" [label="aws_iam_role.this"];
+    "module.eks.module.eks_managed_node_group.aws_iam_role_policy.this" [label="aws_iam_role_policy.this"];
+    "module.eks.module.eks_managed_node_group.aws_iam_role_policy_attachment.additional" [label="aws_iam_role_policy_attachment.additional"];
+    "module.eks.module.eks_managed_node_group.aws_iam_role_policy_attachment.this" [label="aws_iam_role_policy_attachment.this"];
+    "module.eks.module.eks_managed_node_group.aws_launch_template.this" [label="aws_launch_template.this"];
+    "module.eks.module.eks_managed_node_group.aws_placement_group.this" [label="aws_placement_group.this"];
+  }
+  subgraph "cluster_module.eks.module.eks_managed_node_group.module.user_data" {
+    label = "module.eks.module.eks_managed_node_group.module.user_data"
+    fontname = "sans-serif"
+    "module.eks.module.eks_managed_node_group.module.user_data.data.cloudinit_config.al2023_eks_managed_node_group" [label="data.cloudinit_config.al2023_eks_managed_node_group"];
+    "module.eks.module.eks_managed_node_group.module.user_data.data.cloudinit_config.linux_eks_managed_node_group" [label="data.cloudinit_config.linux_eks_managed_node_group"];
+    "module.eks.module.eks_managed_node_group.module.user_data.null_resource.validate_cluster_service_cidr" [label="null_resource.validate_cluster_service_cidr"];
+  }
+  subgraph "cluster_module.eks.module.fargate_profile" {
+    label = "module.eks.module.fargate_profile"
+    fontname = "sans-serif"
+    "module.eks.module.fargate_profile.data.aws_caller_identity.current" [label="data.aws_caller_identity.current"];
+    "module.eks.module.fargate_profile.data.aws_iam_policy_document.assume_role_policy" [label="data.aws_iam_policy_document.assume_role_policy"];
+    "module.eks.module.fargate_profile.data.aws_iam_policy_document.role" [label="data.aws_iam_policy_document.role"];
+    "module.eks.module.fargate_profile.data.aws_partition.current" [label="data.aws_partition.current"];
+    "module.eks.module.fargate_profile.data.aws_region.current" [label="data.aws_region.current"];
+    "module.eks.module.fargate_profile.aws_eks_fargate_profile.this" [label="aws_eks_fargate_profile.this"];
+    "module.eks.module.fargate_profile.aws_iam_role.this" [label="aws_iam_role.this"];
+    "module.eks.module.fargate_profile.aws_iam_role_policy.this" [label="aws_iam_role_policy.this"];
+    "module.eks.module.fargate_profile.aws_iam_role_policy_attachment.additional" [label="aws_iam_role_policy_attachment.additional"];
+    "module.eks.module.fargate_profile.aws_iam_role_policy_attachment.this" [label="aws_iam_role_policy_attachment.this"];
+  }
+  subgraph "cluster_module.eks.module.kms" {
+    label = "module.eks.module.kms"
+    fontname = "sans-serif"
+    "module.eks.module.kms.data.aws_caller_identity.current" [label="data.aws_caller_identity.current"];
+    "module.eks.module.kms.data.aws_iam_policy_document.this" [label="data.aws_iam_policy_document.this"];
+    "module.eks.module.kms.data.aws_partition.current" [label="data.aws_partition.current"];
+    "module.eks.module.kms.aws_kms_alias.this" [label="aws_kms_alias.this"];
+    "module.eks.module.kms.aws_kms_external_key.this" [label="aws_kms_external_key.this"];
+    "module.eks.module.kms.aws_kms_grant.this" [label="aws_kms_grant.this"];
+    "module.eks.module.kms.aws_kms_key.this" [label="aws_kms_key.this"];
+    "module.eks.module.kms.aws_kms_replica_external_key.this" [label="aws_kms_replica_external_key.this"];
+    "module.eks.module.kms.aws_kms_replica_key.this" [label="aws_kms_replica_key.this"];
+  }
+  subgraph "cluster_module.eks.module.self_managed_node_group" {
+    label = "module.eks.module.self_managed_node_group"
+    fontname = "sans-serif"
+    "module.eks.module.self_managed_node_group.data.aws_caller_identity.current" [label="data.aws_caller_identity.current"];
+    "module.eks.module.self_managed_node_group.data.aws_ec2_instance_type.this" [label="data.aws_ec2_instance_type.this"];
+    "module.eks.module.self_managed_node_group.data.aws_ec2_instance_type_offerings.this" [label="data.aws_ec2_instance_type_offerings.this"];
+    "module.eks.module.self_managed_node_group.data.aws_iam_policy_document.assume_role_policy" [label="data.aws_iam_policy_document.assume_role_policy"];
+    "module.eks.module.self_managed_node_group.data.aws_iam_policy_document.role" [label="data.aws_iam_policy_document.role"];
+    "module.eks.module.self_managed_node_group.data.aws_partition.current" [label="data.aws_partition.current"];
+    "module.eks.module.self_managed_node_group.data.aws_ssm_parameter.ami" [label="data.aws_ssm_parameter.ami"];
+    "module.eks.module.self_managed_node_group.data.aws_subnets.placement_group" [label="data.aws_subnets.placement_group"];
+    "module.eks.module.self_managed_node_group.aws_autoscaling_group.this" [label="aws_autoscaling_group.this"];
+    "module.eks.module.self_managed_node_group.aws_autoscaling_schedule.this" [label="aws_autoscaling_schedule.this"];
+    "module.eks.module.self_managed_node_group.aws_eks_access_entry.this" [label="aws_eks_access_entry.this"];
+    "module.eks.module.self_managed_node_group.aws_iam_instance_profile.this" [label="aws_iam_instance_profile.this"];
+    "module.eks.module.self_managed_node_group.aws_iam_role.this" [label="aws_iam_role.this"];
+    "module.eks.module.self_managed_node_group.aws_iam_role_policy.this" [label="aws_iam_role_policy.this"];
+    "module.eks.module.self_managed_node_group.aws_iam_role_policy_attachment.additional" [label="aws_iam_role_policy_attachment.additional"];
+    "module.eks.module.self_managed_node_group.aws_iam_role_policy_attachment.this" [label="aws_iam_role_policy_attachment.this"];
+    "module.eks.module.self_managed_node_group.aws_launch_template.this" [label="aws_launch_template.this"];
+    "module.eks.module.self_managed_node_group.aws_placement_group.this" [label="aws_placement_group.this"];
+  }
+  subgraph "cluster_module.eks.module.self_managed_node_group.module.user_data" {
+    label = "module.eks.module.self_managed_node_group.module.user_data"
+    fontname = "sans-serif"
+    "module.eks.module.self_managed_node_group.module.user_data.data.cloudinit_config.al2023_eks_managed_node_group" [label="data.cloudinit_config.al2023_eks_managed_node_group"];
+    "module.eks.module.self_managed_node_group.module.user_data.data.cloudinit_config.linux_eks_managed_node_group" [label="data.cloudinit_config.linux_eks_managed_node_group"];
+    "module.eks.module.self_managed_node_group.module.user_data.null_resource.validate_cluster_service_cidr" [label="null_resource.validate_cluster_service_cidr"];
+  }
+  subgraph "cluster_module.eks_managed_node_group" {
+    label = "module.eks_managed_node_group"
+    fontname = "sans-serif"
+    "module.eks_managed_node_group.data.aws_caller_identity.current" [label="data.aws_caller_identity.current"];
+    "module.eks_managed_node_group.data.aws_ec2_instance_type.this" [label="data.aws_ec2_instance_type.this"];
+    "module.eks_managed_node_group.data.aws_ec2_instance_type_offerings.this" [label="data.aws_ec2_instance_type_offerings.this"];
+    "module.eks_managed_node_group.data.aws_iam_policy_document.assume_role_policy" [label="data.aws_iam_policy_document.assume_role_policy"];
+    "module.eks_managed_node_group.data.aws_iam_policy_document.role" [label="data.aws_iam_policy_document.role"];
+    "module.eks_managed_node_group.data.aws_partition.current" [label="data.aws_partition.current"];
+    "module.eks_managed_node_group.data.aws_ssm_parameter.ami" [label="data.aws_ssm_parameter.ami"];
+    "module.eks_managed_node_group.data.aws_subnets.placement_group" [label="data.aws_subnets.placement_group"];
+    "module.eks_managed_node_group.aws_autoscaling_schedule.this" [label="aws_autoscaling_schedule.this"];
+    "module.eks_managed_node_group.aws_eks_node_group.this" [label="aws_eks_node_group.this"];
+    "module.eks_managed_node_group.aws_iam_role.this" [label="aws_iam_role.this"];
+    "module.eks_managed_node_group.aws_iam_role_policy.this" [label="aws_iam_role_policy.this"];
+    "module.eks_managed_node_group.aws_iam_role_policy_attachment.additional" [label="aws_iam_role_policy_attachment.additional"];
+    "module.eks_managed_node_group.aws_iam_role_policy_attachment.this" [label="aws_iam_role_policy_attachment.this"];
+    "module.eks_managed_node_group.aws_launch_template.this" [label="aws_launch_template.this"];
+    "module.eks_managed_node_group.aws_placement_group.this" [label="aws_placement_group.this"];
+  }
+  subgraph "cluster_module.eks_managed_node_group.module.user_data" {
+    label = "module.eks_managed_node_group.module.user_data"
+    fontname = "sans-serif"
+    "module.eks_managed_node_group.module.user_data.data.cloudinit_config.al2023_eks_managed_node_group" [label="data.cloudinit_config.al2023_eks_managed_node_group"];
+    "module.eks_managed_node_group.module.user_data.data.cloudinit_config.linux_eks_managed_node_group" [label="data.cloudinit_config.linux_eks_managed_node_group"];
+    "module.eks_managed_node_group.module.user_data.null_resource.validate_cluster_service_cidr" [label="null_resource.validate_cluster_service_cidr"];
+  }
+  "aws_iam_role.eks_cluster_role" -> "data.aws_iam_policy_document.eks_cluster_assume_role";
+  "aws_iam_role.eks_node_role" -> "data.aws_iam_policy_document.eks_node_assume_role";
+  "aws_iam_role_policy_attachment.ec2_container_registry_read_only" -> "aws_iam_role.eks_node_role";
+  "aws_iam_role_policy_attachment.eks_cluster_policy" -> "aws_iam_role.eks_cluster_role";
+  "aws_iam_role_policy_attachment.eks_cni_policy" -> "aws_iam_role.eks_node_role";
+  "aws_iam_role_policy_attachment.eks_vpc_resource_controller" -> "aws_iam_role.eks_cluster_role";
+  "aws_iam_role_policy_attachment.eks_worker_node_policy" -> "aws_iam_role.eks_node_role";
+  "aws_internet_gateway.igw" -> "aws_vpc.main";
+  "aws_lb.alb" -> "aws_security_group.alb_sg";
+  "aws_lb.alb" -> "aws_subnet.public";
+  "aws_lb_listener.http" -> "aws_lb.alb";
+  "aws_lb_listener.http" -> "aws_lb_target_group.flask_tg";
+  "aws_lb_target_group.flask_tg" -> "aws_vpc.main";
+  "aws_nat_gateway.nat" -> "aws_eip.nat";
+  "aws_nat_gateway.nat" -> "aws_subnet.public";
+  "aws_route.private_internet_access" -> "aws_nat_gateway.nat";
+  "aws_route.private_internet_access" -> "aws_route_table.private";
+  "aws_route.public_internet_access" -> "aws_internet_gateway.igw";
+  "aws_route.public_internet_access" -> "aws_route_table.public";
+  "aws_route_table.private" -> "aws_vpc.main";
+  "aws_route_table.public" -> "aws_vpc.main";
+  "aws_route_table_association.private" -> "aws_route_table.private";
+  "aws_route_table_association.private" -> "aws_subnet.private";
+  "aws_route_table_association.public" -> "aws_route_table.public";
+  "aws_route_table_association.public" -> "aws_subnet.public";
+  "aws_security_group.alb_sg" -> "aws_vpc.main";
+  "aws_security_group.eks_cluster_sg" -> "aws_vpc.main";
+  "aws_security_group.worker_sg" -> "aws_vpc.main";
+  "aws_subnet.private" -> "aws_vpc.main";
+  "aws_subnet.public" -> "aws_vpc.main";
+  "aws_vpc_security_group_egress_rule.alb_allow_all_egress" -> "aws_security_group.alb_sg";
+  "aws_vpc_security_group_egress_rule.allow_all_traffic_ipv4" -> "aws_security_group.eks_cluster_sg";
+  "aws_vpc_security_group_egress_rule.worker_allow_all_egress" -> "aws_security_group.worker_sg";
+  "aws_vpc_security_group_ingress_rule.alb_http_ingress" -> "aws_security_group.alb_sg";
+  "aws_vpc_security_group_ingress_rule.alb_https_ingress" -> "aws_security_group.alb_sg";
+  "aws_vpc_security_group_ingress_rule.allow_worker_traffic_ipv4" -> "aws_security_group.eks_cluster_sg";
+  "aws_vpc_security_group_ingress_rule.worker_https_ingress" -> "aws_security_group.eks_cluster_sg";
+  "aws_vpc_security_group_ingress_rule.worker_https_ingress" -> "aws_security_group.worker_sg";
+  "aws_vpc_security_group_ingress_rule.worker_internal_traffic" -> "aws_security_group.worker_sg";
+  "module.eks.data.aws_eks_addon_version.this" -> "module.eks.aws_eks_cluster.this";
+  "module.eks.data.aws_iam_policy_document.cni_ipv6_policy" -> "module.eks.data.aws_partition.current";
+  "module.eks.data.aws_iam_session_context.current" -> "module.eks.data.aws_caller_identity.current";
+  "module.eks.data.tls_certificate.this" -> "module.eks.aws_eks_cluster.this";
+  "module.eks.aws_ec2_tag.cluster_primary_security_group" -> "module.eks.aws_eks_cluster.this";
+  "module.eks.aws_eks_access_entry.this" -> "module.eks.aws_eks_cluster.this";
+  "module.eks.aws_eks_access_policy_association.this" -> "module.eks.aws_eks_access_entry.this";
+  "module.eks.aws_eks_addon.before_compute" -> "module.eks.data.aws_eks_addon_version.this";
+  "module.eks.aws_eks_addon.this" -> "module.eks.data.aws_eks_addon_version.this";
+  "module.eks.aws_eks_addon.this" -> "module.eks.module.eks_managed_node_group.aws_autoscaling_schedule.this";
+  "module.eks.aws_eks_addon.this" -> "module.eks.module.eks_managed_node_group.aws_iam_role_policy.this";
+  "module.eks.aws_eks_addon.this" -> "module.eks.module.eks_managed_node_group.module.user_data.null_resource.validate_cluster_service_cidr";
+  "module.eks.aws_eks_addon.this" -> "module.eks.module.fargate_profile.aws_eks_fargate_profile.this";
+  "module.eks.aws_eks_addon.this" -> "module.eks.module.fargate_profile.aws_iam_role_policy.this";
+  "module.eks.aws_eks_addon.this" -> "module.eks.module.fargate_profile.aws_iam_role_policy_attachment.additional";
+  "module.eks.aws_eks_addon.this" -> "module.eks.module.fargate_profile.aws_iam_role_policy_attachment.this";
+  "module.eks.aws_eks_addon.this" -> "module.eks.module.self_managed_node_group.aws_autoscaling_schedule.this";
+  "module.eks.aws_eks_addon.this" -> "module.eks.module.self_managed_node_group.aws_eks_access_entry.this";
+  "module.eks.aws_eks_addon.this" -> "module.eks.module.self_managed_node_group.aws_iam_role_policy.this";
+  "module.eks.aws_eks_addon.this" -> "module.eks.module.self_managed_node_group.module.user_data.null_resource.validate_cluster_service_cidr";
+  "module.eks.aws_eks_cluster.this" -> "aws_subnet.private";
+  "module.eks.aws_eks_cluster.this" -> "module.eks.aws_cloudwatch_log_group.this";
+  "module.eks.aws_eks_cluster.this" -> "module.eks.aws_iam_policy.cni_ipv6_policy";
+  "module.eks.aws_eks_cluster.this" -> "module.eks.aws_iam_role_policy_attachment.this";
+  "module.eks.aws_eks_cluster.this" -> "module.eks.aws_security_group_rule.cluster";
+  "module.eks.aws_eks_cluster.this" -> "module.eks.aws_security_group_rule.node";
+  "module.eks.aws_eks_cluster.this" -> "module.eks.module.kms.aws_kms_external_key.this";
+  "module.eks.aws_eks_cluster.this" -> "module.eks.module.kms.aws_kms_key.this";
+  "module.eks.aws_eks_cluster.this" -> "module.eks.module.kms.aws_kms_replica_external_key.this";
+  "module.eks.aws_eks_cluster.this" -> "module.eks.module.kms.aws_kms_replica_key.this";
+  "module.eks.aws_eks_identity_provider_config.this" -> "module.eks.aws_eks_cluster.this";
+  "module.eks.aws_iam_openid_connect_provider.oidc_provider" -> "module.eks.data.tls_certificate.this";
+  "module.eks.aws_iam_policy.cluster_encryption" -> "module.eks.module.kms.aws_kms_external_key.this";
+  "module.eks.aws_iam_policy.cluster_encryption" -> "module.eks.module.kms.aws_kms_key.this";
+  "module.eks.aws_iam_policy.cluster_encryption" -> "module.eks.module.kms.aws_kms_replica_external_key.this";
+  "module.eks.aws_iam_policy.cluster_encryption" -> "module.eks.module.kms.aws_kms_replica_key.this";
+  "module.eks.aws_iam_policy.cni_ipv6_policy" -> "module.eks.data.aws_iam_policy_document.cni_ipv6_policy";
+  "module.eks.aws_iam_role.this" -> "module.eks.data.aws_iam_policy_document.assume_role_policy";
+  "module.eks.aws_iam_role_policy_attachment.additional" -> "module.eks.aws_iam_role.this";
+  "module.eks.aws_iam_role_policy_attachment.cluster_encryption" -> "module.eks.aws_iam_policy.cluster_encryption";
+  "module.eks.aws_iam_role_policy_attachment.this" -> "module.eks.data.aws_partition.current";
+  "module.eks.aws_iam_role_policy_attachment.this" -> "module.eks.aws_iam_role.this";
+  "module.eks.aws_security_group.cluster" -> "aws_vpc.main";
+  "module.eks.aws_security_group.node" -> "aws_vpc.main";
+  "module.eks.aws_security_group_rule.cluster" -> "module.eks.aws_security_group.cluster";
+  "module.eks.aws_security_group_rule.cluster" -> "module.eks.aws_security_group.node";
+  "module.eks.aws_security_group_rule.node" -> "aws_security_group.eks_cluster_sg";
+  "module.eks.aws_security_group_rule.node" -> "module.eks.aws_security_group.cluster";
+  "module.eks.aws_security_group_rule.node" -> "module.eks.aws_security_group.node";
+  "module.eks.time_sleep.this" -> "module.eks.aws_eks_cluster.this";
+  "module.eks.module.eks_managed_node_group.data.aws_ssm_parameter.ami" -> "module.eks.time_sleep.this";
+  "module.eks.module.eks_managed_node_group.data.aws_subnets.placement_group" -> "aws_subnet.private";
+  "module.eks.module.eks_managed_node_group.data.aws_subnets.placement_group" -> "module.eks.module.eks_managed_node_group.data.aws_ec2_instance_type_offerings.this";
+  "module.eks.module.eks_managed_node_group.aws_autoscaling_schedule.this" -> "module.eks.module.eks_managed_node_group.aws_eks_node_group.this";
+  "module.eks.module.eks_managed_node_group.aws_eks_node_group.this" -> "module.eks.module.eks_managed_node_group.data.aws_ssm_parameter.ami";
+  "module.eks.module.eks_managed_node_group.aws_eks_node_group.this" -> "module.eks.module.eks_managed_node_group.data.aws_subnets.placement_group";
+  "module.eks.module.eks_managed_node_group.aws_eks_node_group.this" -> "module.eks.module.eks_managed_node_group.aws_launch_template.this";
+  "module.eks.module.eks_managed_node_group.aws_iam_role.this" -> "module.eks.module.eks_managed_node_group.data.aws_iam_policy_document.assume_role_policy";
+  "module.eks.module.eks_managed_node_group.aws_iam_role_policy.this" -> "module.eks.module.eks_managed_node_group.data.aws_iam_policy_document.role";
+  "module.eks.module.eks_managed_node_group.aws_iam_role_policy.this" -> "module.eks.module.eks_managed_node_group.aws_iam_role.this";
+  "module.eks.module.eks_managed_node_group.aws_iam_role_policy_attachment.additional" -> "module.eks.module.eks_managed_node_group.aws_iam_role.this";
+  "module.eks.module.eks_managed_node_group.aws_iam_role_policy_attachment.this" -> "module.eks.module.eks_managed_node_group.data.aws_caller_identity.current";
+  "module.eks.module.eks_managed_node_group.aws_iam_role_policy_attachment.this" -> "module.eks.module.eks_managed_node_group.data.aws_partition.current";
+  "module.eks.module.eks_managed_node_group.aws_iam_role_policy_attachment.this" -> "module.eks.module.eks_managed_node_group.aws_iam_role.this";
+  "module.eks.module.eks_managed_node_group.aws_launch_template.this" -> "module.eks.module.eks_managed_node_group.data.aws_ec2_instance_type.this";
+  "module.eks.module.eks_managed_node_group.aws_launch_template.this" -> "module.eks.module.eks_managed_node_group.aws_iam_role_policy_attachment.additional";
+  "module.eks.module.eks_managed_node_group.aws_launch_template.this" -> "module.eks.module.eks_managed_node_group.aws_iam_role_policy_attachment.this";
+  "module.eks.module.eks_managed_node_group.aws_launch_template.this" -> "module.eks.module.eks_managed_node_group.aws_placement_group.this";
+  "module.eks.module.eks_managed_node_group.aws_launch_template.this" -> "module.eks.module.eks_managed_node_group.module.user_data.data.cloudinit_config.al2023_eks_managed_node_group";
+  "module.eks.module.eks_managed_node_group.aws_launch_template.this" -> "module.eks.module.eks_managed_node_group.module.user_data.data.cloudinit_config.linux_eks_managed_node_group";
+  "module.eks.module.eks_managed_node_group.aws_placement_group.this" -> "module.eks.time_sleep.this";
+  "module.eks.module.eks_managed_node_group.module.user_data.data.cloudinit_config.al2023_eks_managed_node_group" -> "module.eks.time_sleep.this";
+  "module.eks.module.eks_managed_node_group.module.user_data.null_resource.validate_cluster_service_cidr" -> "module.eks.time_sleep.this";
+  "module.eks.module.fargate_profile.data.aws_iam_policy_document.assume_role_policy" -> "module.eks.time_sleep.this";
+  "module.eks.module.fargate_profile.data.aws_iam_policy_document.assume_role_policy" -> "module.eks.module.fargate_profile.data.aws_caller_identity.current";
+  "module.eks.module.fargate_profile.data.aws_iam_policy_document.assume_role_policy" -> "module.eks.module.fargate_profile.data.aws_partition.current";
+  "module.eks.module.fargate_profile.data.aws_iam_policy_document.assume_role_policy" -> "module.eks.module.fargate_profile.data.aws_region.current";
+  "module.eks.module.fargate_profile.aws_eks_fargate_profile.this" -> "module.eks.module.fargate_profile.aws_iam_role.this";
+  "module.eks.module.fargate_profile.aws_iam_role.this" -> "module.eks.module.fargate_profile.data.aws_iam_policy_document.assume_role_policy";
+  "module.eks.module.fargate_profile.aws_iam_role_policy.this" -> "module.eks.module.fargate_profile.data.aws_iam_policy_document.role";
+  "module.eks.module.fargate_profile.aws_iam_role_policy.this" -> "module.eks.module.fargate_profile.aws_iam_role.this";
+  "module.eks.module.fargate_profile.aws_iam_role_policy_attachment.additional" -> "module.eks.module.fargate_profile.aws_iam_role.this";
+  "module.eks.module.fargate_profile.aws_iam_role_policy_attachment.this" -> "module.eks.module.fargate_profile.aws_iam_role.this";
+  "module.eks.module.kms.data.aws_iam_policy_document.this" -> "aws_iam_role.eks_cluster_role";
+  "module.eks.module.kms.data.aws_iam_policy_document.this" -> "module.eks.data.aws_iam_session_context.current";
+  "module.eks.module.kms.data.aws_iam_policy_document.this" -> "module.eks.aws_iam_role.this";
+  "module.eks.module.kms.data.aws_iam_policy_document.this" -> "module.eks.module.kms.data.aws_caller_identity.current";
+  "module.eks.module.kms.data.aws_iam_policy_document.this" -> "module.eks.module.kms.data.aws_partition.current";
+  "module.eks.module.kms.aws_kms_alias.this" -> "module.eks.module.kms.aws_kms_external_key.this";
+  "module.eks.module.kms.aws_kms_alias.this" -> "module.eks.module.kms.aws_kms_key.this";
+  "module.eks.module.kms.aws_kms_alias.this" -> "module.eks.module.kms.aws_kms_replica_external_key.this";
+  "module.eks.module.kms.aws_kms_alias.this" -> "module.eks.module.kms.aws_kms_replica_key.this";
+  "module.eks.module.kms.aws_kms_external_key.this" -> "module.eks.module.kms.data.aws_iam_policy_document.this";
+  "module.eks.module.kms.aws_kms_grant.this" -> "module.eks.module.kms.aws_kms_external_key.this";
+  "module.eks.module.kms.aws_kms_grant.this" -> "module.eks.module.kms.aws_kms_key.this";
+  "module.eks.module.kms.aws_kms_grant.this" -> "module.eks.module.kms.aws_kms_replica_external_key.this";
+  "module.eks.module.kms.aws_kms_grant.this" -> "module.eks.module.kms.aws_kms_replica_key.this";
+  "module.eks.module.kms.aws_kms_key.this" -> "module.eks.module.kms.data.aws_iam_policy_document.this";
+  "module.eks.module.kms.aws_kms_replica_external_key.this" -> "module.eks.module.kms.data.aws_iam_policy_document.this";
+  "module.eks.module.kms.aws_kms_replica_key.this" -> "module.eks.module.kms.data.aws_iam_policy_document.this";
+  "module.eks.module.self_managed_node_group.data.aws_ssm_parameter.ami" -> "module.eks.time_sleep.this";
+  "module.eks.module.self_managed_node_group.data.aws_subnets.placement_group" -> "aws_subnet.private";
+  "module.eks.module.self_managed_node_group.data.aws_subnets.placement_group" -> "module.eks.module.self_managed_node_group.data.aws_ec2_instance_type_offerings.this";
+  "module.eks.module.self_managed_node_group.aws_autoscaling_group.this" -> "module.eks.module.self_managed_node_group.data.aws_subnets.placement_group";
+  "module.eks.module.self_managed_node_group.aws_autoscaling_group.this" -> "module.eks.module.self_managed_node_group.aws_launch_template.this";
+  "module.eks.module.self_managed_node_group.aws_autoscaling_schedule.this" -> "module.eks.module.self_managed_node_group.aws_autoscaling_group.this";
+  "module.eks.module.self_managed_node_group.aws_eks_access_entry.this" -> "module.eks.time_sleep.this";
+  "module.eks.module.self_managed_node_group.aws_eks_access_entry.this" -> "module.eks.module.self_managed_node_group.aws_iam_role.this";
+  "module.eks.module.self_managed_node_group.aws_iam_instance_profile.this" -> "module.eks.module.self_managed_node_group.aws_iam_role.this";
+  "module.eks.module.self_managed_node_group.aws_iam_role.this" -> "module.eks.module.self_managed_node_group.data.aws_iam_policy_document.assume_role_policy";
+  "module.eks.module.self_managed_node_group.aws_iam_role_policy.this" -> "module.eks.module.self_managed_node_group.data.aws_iam_policy_document.role";
+  "module.eks.module.self_managed_node_group.aws_iam_role_policy.this" -> "module.eks.module.self_managed_node_group.aws_iam_role.this";
+  "module.eks.module.self_managed_node_group.aws_iam_role_policy_attachment.additional" -> "module.eks.module.self_managed_node_group.aws_iam_role.this";
+  "module.eks.module.self_managed_node_group.aws_iam_role_policy_attachment.this" -> "module.eks.module.self_managed_node_group.data.aws_caller_identity.current";
+  "module.eks.module.self_managed_node_group.aws_iam_role_policy_attachment.this" -> "module.eks.module.self_managed_node_group.data.aws_partition.current";
+  "module.eks.module.self_managed_node_group.aws_iam_role_policy_attachment.this" -> "module.eks.module.self_managed_node_group.aws_iam_role.this";
+  "module.eks.module.self_managed_node_group.aws_launch_template.this" -> "module.eks.module.self_managed_node_group.data.aws_ec2_instance_type.this";
+  "module.eks.module.self_managed_node_group.aws_launch_template.this" -> "module.eks.module.self_managed_node_group.data.aws_ssm_parameter.ami";
+  "module.eks.module.self_managed_node_group.aws_launch_template.this" -> "module.eks.module.self_managed_node_group.aws_iam_instance_profile.this";
+  "module.eks.module.self_managed_node_group.aws_launch_template.this" -> "module.eks.module.self_managed_node_group.aws_iam_role_policy_attachment.additional";
+  "module.eks.module.self_managed_node_group.aws_launch_template.this" -> "module.eks.module.self_managed_node_group.aws_iam_role_policy_attachment.this";
+  "module.eks.module.self_managed_node_group.aws_launch_template.this" -> "module.eks.module.self_managed_node_group.aws_placement_group.this";
+  "module.eks.module.self_managed_node_group.aws_launch_template.this" -> "module.eks.module.self_managed_node_group.module.user_data.data.cloudinit_config.al2023_eks_managed_node_group";
+  "module.eks.module.self_managed_node_group.aws_launch_template.this" -> "module.eks.module.self_managed_node_group.module.user_data.data.cloudinit_config.linux_eks_managed_node_group";
+  "module.eks.module.self_managed_node_group.aws_placement_group.this" -> "module.eks.time_sleep.this";
+  "module.eks.module.self_managed_node_group.module.user_data.data.cloudinit_config.al2023_eks_managed_node_group" -> "module.eks.time_sleep.this";
+  "module.eks.module.self_managed_node_group.module.user_data.null_resource.validate_cluster_service_cidr" -> "module.eks.time_sleep.this";
+  "module.eks_managed_node_group.data.aws_subnets.placement_group" -> "aws_subnet.private";
+  "module.eks_managed_node_group.data.aws_subnets.placement_group" -> "module.eks_managed_node_group.data.aws_ec2_instance_type_offerings.this";
+  "module.eks_managed_node_group.aws_autoscaling_schedule.this" -> "module.eks_managed_node_group.aws_eks_node_group.this";
+  "module.eks_managed_node_group.aws_eks_node_group.this" -> "aws_iam_role.eks_node_role";
+  "module.eks_managed_node_group.aws_eks_node_group.this" -> "module.eks_managed_node_group.data.aws_ssm_parameter.ami";
+  "module.eks_managed_node_group.aws_eks_node_group.this" -> "module.eks_managed_node_group.data.aws_subnets.placement_group";
+  "module.eks_managed_node_group.aws_eks_node_group.this" -> "module.eks_managed_node_group.aws_launch_template.this";
+  "module.eks_managed_node_group.aws_iam_role.this" -> "module.eks_managed_node_group.data.aws_iam_policy_document.assume_role_policy";
+  "module.eks_managed_node_group.aws_iam_role_policy.this" -> "module.eks_managed_node_group.data.aws_iam_policy_document.role";
+  "module.eks_managed_node_group.aws_iam_role_policy.this" -> "module.eks_managed_node_group.aws_iam_role.this";
+  "module.eks_managed_node_group.aws_iam_role_policy_attachment.additional" -> "module.eks_managed_node_group.aws_iam_role.this";
+  "module.eks_managed_node_group.aws_iam_role_policy_attachment.this" -> "module.eks_managed_node_group.data.aws_caller_identity.current";
+  "module.eks_managed_node_group.aws_iam_role_policy_attachment.this" -> "module.eks_managed_node_group.data.aws_partition.current";
+  "module.eks_managed_node_group.aws_iam_role_policy_attachment.this" -> "module.eks_managed_node_group.aws_iam_role.this";
+  "module.eks_managed_node_group.aws_launch_template.this" -> "aws_security_group.worker_sg";
+  "module.eks_managed_node_group.aws_launch_template.this" -> "module.eks_managed_node_group.data.aws_ec2_instance_type.this";
+  "module.eks_managed_node_group.aws_launch_template.this" -> "module.eks_managed_node_group.aws_iam_role_policy_attachment.additional";
+  "module.eks_managed_node_group.aws_launch_template.this" -> "module.eks_managed_node_group.aws_iam_role_policy_attachment.this";
+  "module.eks_managed_node_group.aws_launch_template.this" -> "module.eks_managed_node_group.aws_placement_group.this";
+  "module.eks_managed_node_group.aws_launch_template.this" -> "module.eks_managed_node_group.module.user_data.data.cloudinit_config.al2023_eks_managed_node_group";
+  "module.eks_managed_node_group.aws_launch_template.this" -> "module.eks_managed_node_group.module.user_data.data.cloudinit_config.linux_eks_managed_node_group";
+  "module.eks_managed_node_group.aws_placement_group.this" -> "module.eks.aws_eks_access_policy_association.this";
+  "module.eks_managed_node_group.module.user_data.data.cloudinit_config.al2023_eks_managed_node_group" -> "module.eks.aws_eks_access_policy_association.this";
+}

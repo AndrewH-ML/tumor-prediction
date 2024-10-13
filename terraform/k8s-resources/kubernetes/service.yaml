@@ -1,14 +1,17 @@
-# service.yaml
+# service.yaml inside tumor-prediction/terraform/k8s-resources/kubernetes/
+
 apiVersion: v1
 kind: Service
 metadata:
   name: tumor-prediction-service
 spec:
-  type: LoadBalancer
+  type: NodePort
   ports:
   - port: 80
     targetPort: 5000
+    nodePort: 30080
   selector:
     app: tumor-prediction-app
+
     
 
