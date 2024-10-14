@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: tumor-prediction-container
-          image: ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/tumor-prediction-repo:latest
+          image: ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/tumor-prediction-repo:${IMAGE_TAG}
           imagePullPolicy: Always
           ports:
             - containerPort: 5000

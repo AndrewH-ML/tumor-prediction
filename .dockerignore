@@ -1,0 +1,31 @@
+# Ignore Python bytecode files
+__pycache__/
+*.pyc
+*.pyo
+
+# Ignore virtual environments
+venv/
+
+# Ignore git metadata
+.git
+.gitignore
+.github
+
+# Ignore test and documentation files
+tests/
+docs/
+data/
+# Ignore IDE files
+.vscode/
+.idea/
+# Ignore terraform configuration
+terraform/
+kubernetes/
+# Ignore .github
+.github/
+# Ignore extras
+getparams.py
+set_env.sh 
+Dockerfile
+setup.cfg 
+
