@@ -115,7 +115,7 @@ jobs:
         run: |
           if ! kubectl get service tumor-prediction-service -n default; then
             echo "Service does not exist. Creating service..."
-            kubectl apply -f tumor-prediction/terraform/k8s-resources/kubernetes/service.yaml
+            kubectl apply -f terraform/k8s-resources/kubernetes/service.yaml
 
           else 
             echo "Service already exists. No changes made."
@@ -134,5 +134,5 @@ jobs:
             kubectl rollout restart deployment/${DEPLOYMENT_NAME}
           else
             echo "No existing deployment. Creating new Deployment"
-            envsubst < tumor-prediction/terraform/k8s-resources/kubernetes/deployment.yaml | kubectl apply -f -
+            envsubst < terraform/k8s-resources/kubernetes/deployment.yaml | kubectl apply -f -
           fi
