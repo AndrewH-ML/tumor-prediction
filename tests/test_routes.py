@@ -24,8 +24,8 @@ class TestRoutes(unittest.TestCase):
             '/predict',
             data={'file': (io.BytesIO(b"fake data"), 'test.txt')}
         )
-        self.assertEqual(response.status_code, 500)
-        self.assertIn(b'Failed to process the image', response.data)
+        self.assertEqual(response.status_code, 400)
+        self.assertIn(b'File type not allowed', response.data)
 
     def test_predict_valid_image(self):
         # Create a simple test image
