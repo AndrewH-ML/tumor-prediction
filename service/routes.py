@@ -1,4 +1,4 @@
-# routes.py
+# routes.py in tumor-prediction/service
 
 from flask import request, jsonify, render_template
 from service import app

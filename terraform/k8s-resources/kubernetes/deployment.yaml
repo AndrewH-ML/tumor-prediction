@@ -4,6 +4,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: tumor-prediction-deployment
+  namespace: tumor-prediction-namespace
 spec:
   replicas: 2
   selector:

@@ -1,4 +1,4 @@
-# __init__.py
+# __init__.py in tumor-prediction/service
 
 import sys
 from flask import Flask

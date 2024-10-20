@@ -1,21 +1,33 @@
 # Dockerfile
 
-# Use a base image
-FROM python:3.11-slim
+# Build stage
+FROM python:3.11-slim AS builder
 
-# Set working directory
+RUN groupadd -r appgroup && useradd -r -g appgroup appuser
+
 WORKDIR /app
 
-# Copy requirements and install dependencies
 COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir --prefix=/install -r requirements.txt
 
-# Copy the application code
-COPY . .
+# Runtime stage
+FROM python:3.11-slim
+
+RUN groupadd -r appgroup && useradd -r -g appgroup appuser
+
+WORKDIR /app
+
+COPY --from=builder /install /usr/local
+
+COPY ..
+
+RUN chown -R appuser:appgroup /app
+
+USER appuser
 
 # Set environment variables
 ENV FLASK_APP=service
-ENV FLASK_ENV=development
+ENV FLASK_ENV=production
 ENV GUNICORN_CMD_ARGS="--timeout 120" 
 # Expose the application port
 EXPOSE 5000

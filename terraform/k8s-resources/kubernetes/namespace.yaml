@@ -1,0 +1,13 @@
+# namespacem.yaml inside tumor-prediction/terraform/k8s-resources/kubernetes/
+
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: tumor-prediction-namespace
+  labels:
+    pod-security.kubernetes.io/enforce: baseline
+    pod-security.kubernetes.io/enforce-version: v1.31
+    pod-security.kubernetes.io/audit: restricted
+    pod-security.kubernetes.io/audit-version: v1.31
+    pod-security.kubernetes.io/warn: restricted
+    pod-security.kubernetes.io/warn-version: v1.31

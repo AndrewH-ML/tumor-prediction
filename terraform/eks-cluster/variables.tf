@@ -45,5 +45,5 @@ variable "max_size" {
 }
 
 variable "kubernetes_version" {
-  default = "1.29"
+  default = "1.31"
 }
